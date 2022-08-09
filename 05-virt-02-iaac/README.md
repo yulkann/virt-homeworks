@@ -27,6 +27,7 @@
                               6.1.34_Ubuntur150636
 
 - Vagrant
+
                               root@yulka92842:~# vagrant -v
                               Vagrant 2.2.6
 
