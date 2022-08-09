@@ -22,8 +22,17 @@
 Установить на личный компьютер:
 
 - VirtualBox
+-
+![изображение](https://user-images.githubusercontent.com/91043924/183605420-9602c0a3-acc3-4426-b2dc-d5931e3d06c8.png)
+
 - Vagrant
+
+![изображение](https://user-images.githubusercontent.com/91043924/183605967-ae0d3f34-d3ce-49eb-879a-ec7224873c97.png)
+
 - Ansible
+
+![изображение](https://user-images.githubusercontent.com/91043924/183606434-5e68879e-c774-4ef8-ac70-a0489038729d.png)
+
 
 *Приложить вывод команд установленных версий каждой из программ, оформленный в markdown.*
 
