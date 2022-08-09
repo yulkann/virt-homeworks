@@ -23,23 +23,23 @@
 
 - VirtualBox
 -
-                              root@yulka92842:~# vboxmanage --version
-                              6.1.34_Ubuntur150636
+           root@yulka92842:~# vboxmanage --version
+           6.1.34_Ubuntur150636
 
 - Vagrant
 
-                              root@yulka92842:~# vagrant -v
-                              Vagrant 2.2.6
+           root@yulka92842:~# vagrant -v
+           Vagrant 2.2.6
 
 - Ansible
 
-                              root@yulka92842:~# ansible --version
-                              ansible 2.9.6
-                                config file = /etc/ansible/ansible.cfg
-                                configured module search path = ['/root/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
-                                ansible python module location = /usr/lib/python3/dist-packages/ansible
-                                executable location = /usr/bin/ansible
-                                python version = 3.8.10 (default, Jun 22 2022, 20:18:18) [GCC 9.4.0]
+            root@yulka92842:~# ansible --version
+            ansible 2.9.6
+              config file = /etc/ansible/ansible.cfg
+              configured module search path = ['/root/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+              ansible python module location = /usr/lib/python3/dist-packages/ansible
+              executable location = /usr/bin/ansible
+              python version = 3.8.10 (default, Jun 22 2022, 20:18:18) [GCC 9.4.0]
 
 
 *Приложить вывод команд установленных версий каждой из программ, оформленный в markdown.*
