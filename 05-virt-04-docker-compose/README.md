@@ -39,7 +39,7 @@
 - Скриншот страницы свойств созданной ВМ, как на примере ниже:
 
 <p align="center">
-  <img width="1200" height="600" src="./assets/yc_01.png">
+  ![изображение](https://user-images.githubusercontent.com/91043924/194177921-f417a5a4-d604-4dd3-98f3-c3a660e75f4f.png)
 </p>
 
 ## Задача 3
