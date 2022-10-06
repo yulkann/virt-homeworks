@@ -38,6 +38,7 @@
 ```
 docker node ls
 ```
+![изображение](https://user-images.githubusercontent.com/91043924/194410221-55708a96-d4ed-4f23-a7c7-363c6b3959a5.png)
 
 ## Задача 3
 
