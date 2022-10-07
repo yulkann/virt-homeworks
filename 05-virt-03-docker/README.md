@@ -49,11 +49,82 @@ https://hub.docker.com/r/yulkann/nginx_netology/
 
 ## Задача 3
 
-- Запустите первый контейнер из образа ***centos*** c любым тэгом в фоновом режиме, подключив папку ```/data``` из текущей рабочей директории на хостовой машине в ```/data``` контейнера;
-- Запустите второй контейнер из образа ***debian*** в фоновом режиме, подключив папку ```/data``` из текущей рабочей директории на хостовой машине в ```/data``` контейнера;
-- Подключитесь к первому контейнеру с помощью ```docker exec``` и создайте текстовый файл любого содержания в ```/data```;
-- Добавьте еще один файл в папку ```/data``` на хостовой машине;
-- Подключитесь во второй контейнер и отобразите листинг и содержание файлов в ```/data``` контейнера.
+      root@yulka98356:~/05-virt-03-docker# docker run -d -v /data:/data centos:centos7.9.2009 sleep infinity
+      b19750d5288c7479caf5f198fe9c7ccf84a6b4d100e3652933bd602c7f888351
+      root@yulka98356:~/05-virt-03-docker# docker ps
+      CONTAINER ID   IMAGE                   COMMAND            CREATED          STATUS         PORTS     NAMES
+      b19750d5288c   centos:centos7.9.2009   "sleep infinity"   10 seconds ago   Up 9 seconds             quizzical_maxwell
+      root@yulka98356:~/05-virt-03-docker# docker exec -it b19750d5288c ls -lah
+      total 68K
+      drwxr-xr-x   1 root root 4.0K Oct  7 02:08 .
+      drwxr-xr-x   1 root root 4.0K Oct  7 02:08 ..
+      -rwxr-xr-x   1 root root    0 Oct  7 02:08 .dockerenv
+      -rw-r--r--   1 root root  12K Nov 13  2020 anaconda-post.log
+      lrwxrwxrwx   1 root root    7 Nov 13  2020 bin -> usr/bin
+      drwxr-xr-x   2 root root 4.0K Oct  7 01:34 data
+      drwxr-xr-x   5 root root  340 Oct  7 02:08 dev
+      drwxr-xr-x   1 root root 4.0K Oct  7 02:08 etc
+      drwxr-xr-x   2 root root 4.0K Apr 11  2018 home
+      lrwxrwxrwx   1 root root    7 Nov 13  2020 lib -> usr/lib
+      lrwxrwxrwx   1 root root    9 Nov 13  2020 lib64 -> usr/lib64
+      drwxr-xr-x   2 root root 4.0K Apr 11  2018 media
+      drwxr-xr-x   2 root root 4.0K Apr 11  2018 mnt
+      drwxr-xr-x   2 root root 4.0K Apr 11  2018 opt
+      dr-xr-xr-x 252 root root    0 Oct  7 02:08 proc
+      dr-xr-x---   2 root root 4.0K Nov 13  2020 root
+      drwxr-xr-x  11 root root 4.0K Nov 13  2020 run
+      lrwxrwxrwx   1 root root    8 Nov 13  2020 sbin -> usr/sbin
+      drwxr-xr-x   2 root root 4.0K Apr 11  2018 srv
+      dr-xr-xr-x  13 root root    0 Oct  7 02:08 sys
+      drwxrwxrwt   7 root root 4.0K Nov 13  2020 tmp
+      drwxr-xr-x  13 root root 4.0K Nov 13  2020 usr
+      drwxr-xr-x  18 root root 4.0K Nov 13  2020 var
+      root@yulka98356:~/05-virt-03-docker# docker run -v /data:/data -d debian sleep infinity
+      Unable to find image 'debian:latest' locally
+      latest: Pulling from library/debian
+      f606d8928ed3: Pull complete
+      Digest: sha256:e538a2f0566efc44db21503277c7312a142f4d0dedc5d2886932b92626104bff
+      Status: Downloaded newer image for debian:latest
+      835da72454bc91082aacfb61116178ac1ed1b4881f9da34989ac605954ad65be
+      root@yulka98356:~/05-virt-03-docker# docker ps
+      CONTAINER ID   IMAGE                   COMMAND            CREATED          STATUS          PORTS     NAMES
+      835da72454bc   debian                  "sleep infinity"   15 seconds ago   Up 13 seconds             jovial_easley
+      b19750d5288c   centos:centos7.9.2009   "sleep infinity"   2 minutes ago    Up 2 minutes              quizzical_maxwell
+      root@yulka98356:~/05-virt-03-docker# docker exec -it 835da72454bc ls -lah
+      total 76K
+      drwxr-xr-x   1 root root 4.0K Oct  7 02:11 .
+      drwxr-xr-x   1 root root 4.0K Oct  7 02:11 ..
+      -rwxr-xr-x   1 root root    0 Oct  7 02:11 .dockerenv
+      drwxr-xr-x   2 root root 4.0K Oct  4 00:00 bin
+      drwxr-xr-x   2 root root 4.0K Sep  3 12:10 boot
+      drwxr-xr-x   2 root root 4.0K Oct  7 01:34 data
+      drwxr-xr-x   5 root root  340 Oct  7 02:11 dev
+      drwxr-xr-x   1 root root 4.0K Oct  7 02:11 etc
+      drwxr-xr-x   2 root root 4.0K Sep  3 12:10 home
+      drwxr-xr-x   8 root root 4.0K Oct  4 00:00 lib
+      drwxr-xr-x   2 root root 4.0K Oct  4 00:00 lib64
+      drwxr-xr-x   2 root root 4.0K Oct  4 00:00 media
+      drwxr-xr-x   2 root root 4.0K Oct  4 00:00 mnt
+      drwxr-xr-x   2 root root 4.0K Oct  4 00:00 opt
+      dr-xr-xr-x 254 root root    0 Oct  7 02:11 proc
+      drwx------   2 root root 4.0K Oct  4 00:00 root
+      drwxr-xr-x   3 root root 4.0K Oct  4 00:00 run
+      drwxr-xr-x   2 root root 4.0K Oct  4 00:00 sbin
+      drwxr-xr-x   2 root root 4.0K Oct  4 00:00 srv
+      dr-xr-xr-x  13 root root    0 Oct  7 02:11 sys
+      drwxrwxrwt   2 root root 4.0K Oct  4 00:00 tmp
+      drwxr-xr-x  11 root root 4.0K Oct  4 00:00 usr
+      drwxr-xr-x  11 root root 4.0K Oct  4 00:00 var
+      root@yulka98356:~/05-virt-03-docker# docker exec -it b19750d5288c echo '' > /data/FILE1
+      root@yulka98356:~/05-virt-03-docker# docker exec -it 835da72454bc echo '' > /data/FILE2
+      root@yulka98356:~/05-virt-03-docker# echo '' > /data/FILE3
+      root@yulka98356:~/05-virt-03-docker# docker exec -it 835da72454bc ls -lah /data
+      total 20K
+      drwxr-xr-x 2 root root 4.0K Oct  7 02:13 .
+      drwxr-xr-x 1 root root 4.0K Oct  7 02:11 ..
+      -rw-r--r-- 1 root root    2 Oct  7 02:13 FILE1
+      -rw-r--r-- 1 root root    2 Oct  7 02:13 FILE2
+      -rw-r--r-- 1 root root    1 Oct  7 02:13 FILE3
 
 ## Задача 4 (*)
 
@@ -62,10 +133,4 @@ https://hub.docker.com/r/yulkann/nginx_netology/
 Соберите Docker образ с Ansible, загрузите на Docker Hub и пришлите ссылку вместе с остальными ответами к задачам.
 
 
----
 
-### Как cдавать задание
-
-Выполненное домашнее задание пришлите ссылкой на .md-файл в вашем репозитории.
-
----
