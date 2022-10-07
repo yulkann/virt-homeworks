@@ -22,6 +22,11 @@ Hey, Netology
 ```
 Опубликуйте созданный форк в своем репозитории и предоставьте ответ в виде ссылки на https://hub.docker.com/username_repo.
 
+![изображение](https://user-images.githubusercontent.com/91043924/194444015-ecc9753e-78c7-45a5-bad9-5ee2187fbd45.png)
+
+https://hub.docker.com/r/yulkann/nginx_netology/
+
+
 ## Задача 2
 
 Посмотрите на сценарий ниже и ответьте на вопрос:
