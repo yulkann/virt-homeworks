@@ -133,4 +133,4 @@ https://hub.docker.com/r/yulkann/nginx_netology/
 Соберите Docker образ с Ansible, загрузите на Docker Hub и пришлите ссылку вместе с остальными ответами к задачам.
 
 
-
+https://hub.docker.com/r/yulkann/ansible
