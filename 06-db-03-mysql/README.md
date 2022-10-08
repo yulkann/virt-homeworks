@@ -1,10 +1,5 @@
 # Домашнее задание к занятию "6.3. MySQL"
 
-## Введение
-
-Перед выполнением задания вы можете ознакомиться с 
-[дополнительными материалами](https://github.com/netology-code/virt-homeworks/tree/master/additional/README.md).
-
 ## Задача 1
 
 Используя docker поднимите инстанс MySQL (версию 8). Данные БД сохраните в volume.
@@ -18,11 +13,58 @@
 
 Найдите команду для выдачи статуса БД и **приведите в ответе** из ее вывода версию сервера БД.
 
+        mysql> \s
+        --------------
+        mysql  Ver 8.0.30 for Linux on x86_64 (MySQL Community Server - GPL)
+
+        Connection id:          17
+        Current database:       mysql
+        Current user:           root@localhost
+        SSL:                    Not in use
+        Current pager:          stdout
+        Using outfile:          ''
+        Using delimiter:        ;
+        Server version:         8.0.30 MySQL Community Server - GPL
+        Protocol version:       10
+        Connection:             Localhost via UNIX socket
+        Server characterset:    utf8mb4
+        Db     characterset:    utf8mb4
+        Client characterset:    latin1
+        Conn.  characterset:    latin1
+        UNIX socket:            /var/run/mysqld/mysqld.sock
+        Binary data as:         Hexadecimal
+        Uptime:                 23 min 49 sec
+
+        Threads: 2  Questions: 209  Slow queries: 0  Opens: 313  Flush tables: 3  Open tables: 231  Queries per second avg: 0.146
+        --------------
+
 Подключитесь к восстановленной БД и получите список таблиц из этой БД.
+
+        mysql> use test_db
+        Reading table information for completion of table and column names
+        You can turn off this feature to get a quicker startup with -A
+
+        Database changed
+        mysql> show tables
+            -> ^C
+        mysql> show tables ;
+        +-------------------+
+        | Tables_in_test_db |
+        +-------------------+
+        | orders            |
+        +-------------------+
+        1 row in set (0.00 sec)
 
 **Приведите в ответе** количество записей с `price` > 300.
 
-В следующих заданиях мы будем продолжать работу с данным контейнером.
+mysql> select count(*) from orders where price >300;
++----------+
+| count(*) |
++----------+
+|        1 |
++----------+
+1 row in set (0.00 sec)
+
 
 ## Задача 2
 
