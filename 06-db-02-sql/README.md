@@ -125,17 +125,18 @@
 
 ## Задача 3
 
-test_db=# SELECT COUNT(*) FROM orders;
- count
--------
-     5
-(1 row)
 
-test_db=# SELECT COUNT(*) FROM clients;
- count
--------
-     5
-(1 row)
+                                    test_db=# SELECT COUNT(*) FROM orders;
+                                     count
+                                    -------
+                                         5
+                                    (1 row)
+
+                                    test_db=# SELECT COUNT(*) FROM clients;
+                                     count
+                                    -------
+                                         5
+                                    (1 row)
 
 ## Задача 4
 
