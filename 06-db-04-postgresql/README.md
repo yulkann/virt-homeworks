@@ -72,18 +72,42 @@
 
 Предложите SQL-транзакцию для проведения данной операции.
 
+        BEGIN;
+        CREATE TABLE public.orders_1 (
+            id integer NOT NULL,
+            title character varying(80) NOT NULL,
+            price integer DEFAULT 0
+        );
+        CREATE TABLE public.orders_2 (
+            id integer NOT NULL,
+            title character varying(80) NOT NULL,
+            price integer DEFAULT 0
+        );
+        INSERT INTO orders_1 SELECT * FROM orders WHERE price > 499;
+        INSERT INTO orders_2 SELECT * FROM orders WHERE price <= 499;
+        COMMIT;
+
 Можно ли было изначально исключить "ручное" разбиение при проектировании таблицы orders?
+
+        CREATE TABLE orders_1 (
+            CHECK ( price > 499 )
+        ) INHERITS ( orders );
+        CREATE TABLE orders_2 (
+            CHECK ( price <= 499 )
+        ) INHERITS ( orders );
+        CREATE RULE price1 AS ON INSERT TO orders
+        WHERE ( price > 499 )
+        DO INSTEAD INSERT INTO orders_1 VALUES (NEW.*);
+        CREATE RULE price2 AS ON INSERT TO orders
+        WHERE ( price <= 499 )
+        DO INSTEAD INSERT INTO orders_2 VALUES (NEW.*);
 
 ## Задача 4
 
 Используя утилиту `pg_dump` создайте бекап БД `test_database`.
 
+        root@yulka98356:/# pg_dump -U postgres -d test_database > test_database_dump.sql
+
 Как бы вы доработали бэкап-файл, чтобы добавить уникальность значения столбца `title` для таблиц `test_database`?
 
----
-
-### Как cдавать задание
-
-Выполненное домашнее задание пришлите ссылкой на .md-файл в вашем репозитории.
-
----
+            CREATE INDEX ON orders ((lower(title)));
