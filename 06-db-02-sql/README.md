@@ -188,11 +188,7 @@
 
 Создайте бэкап БД test_db и поместите его в volume, предназначенный для бэкапов (см. Задачу 1).
 
-            # cd /backup
-            # ls
-            # pg_dump -U netologyuser test_db > /backup/dump.sql
-            # ls
-            dump.sql
+                        root@yulka98356:/#  pg_dumpall -U netologyuser > /backup/all
 
 Остановите контейнер с PostgreSQL (но не удаляйте volumes).
 
@@ -206,16 +202,55 @@
 
 Поднимите новый пустой контейнер с PostgreSQL.
 
-                        root@yulka98356:~/06-db-02-sql/PGSQL2# docker-compose up -d
-                        Creating network "pgsql2_default" with the default driver
-                        Creating volume "pgsql2_postgressql_data" with default driver
-                        Creating volume "pgsql2_backup_postgressql_data" with default driver
-                        Creating postgres2 ... done
-                        root@yulka98356:~/06-db-02-sql/PGSQL2# docker ps -a
-                        CONTAINER ID   IMAGE         COMMAND                  CREATED          STATUS                     PORTS                                                 NAMES
-                        5e167d80829f   postgres:12   "docker-entrypoint.s…"   14 seconds ago   Up 13 seconds              5432/tcp, 0.0.0.0:5433->5433/tcp, :::5433->5433/tcp   postgres2
-                        a30479e23b1f   postgres:12   "docker-entrypoint.s…"   4 hours ago      Exited (1) 3 minutes ago                                                         postgres_netology
+                        root@yulka98356:~/06-db-02-sql/PGSQL# docker run --rm --name postgres2 -e POSTGRES_PASSWORD=postgres -v /var/lib/docker/volumes/pgsql_backup_postgressql_data/_data:/backup postgres:12 &
 
 Восстановите БД test_db в новом контейнере.
 
+                        root@yulka98356:~/06-db-02-sql/PGSQL# docker exec -it postgres2 su - postgres
+                        postgres@80cf96c03a67:~$ psql -f /backup/all postgres
+                        ...
+                        postgres@80cf96c03a67:~$ psql -U postgres -d test_db
+                        psql (12.12 (Debian 12.12-1.pgdg110+1))
+                        Type "help" for help.
 
+                        test_db=# \l
+                                                                 List of databases
+                           Name    |    Owner     | Encoding |  Collate   |   Ctype    |         Access privileges
+                        -----------+--------------+----------+------------+------------+------------------------------------
+                         postgres  | postgres     | UTF8     | en_US.utf8 | en_US.utf8 |
+                         template0 | postgres     | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres                       +
+                                   |              |          |            |            | postgres=CTc/postgres
+                         template1 | postgres     | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres                       +
+                                   |              |          |            |            | postgres=CTc/postgres
+                         test_db   | netologyuser | UTF8     | en_US.utf8 | en_US.utf8 | =Tc/netologyuser                  +
+                                   |              |          |            |            | netologyuser=CTc/netologyuser     +
+                                   |              |          |            |            | "test-admin-user"=CTc/netologyuser
+                        (4 rows)
+
+                        test_db=# \dt
+                                    List of relations
+                         Schema |  Name   | Type  |    Owner
+                        --------+---------+-------+--------------
+                         public | clients | table | netologyuser
+                         public | orders  | table | netologyuser
+                        (2 rows)
+
+                        test_db=# SELECT * FROM orders;
+                         id |                 name                  | price
+                        ----+---------------------------------------+-------
+                          1 | Шоколад                        |    10
+                          2 | Принтер                        |  3000
+                          3 | Книга                            |   500
+                          4 | Монитор                        |  7000
+                          5 | Гитара                          |  4000
+                        (5 rows)
+
+                        test_db=# SELECT * FROM clients;
+                         id |                     lastname                     |            country             | book
+                        ----+--------------------------------------------------+--------------------------------+------
+                          4 | Ронни Джеймс Дио                   | Russia                         |
+                          5 | Ritchie Blackmore                                | Russia                         |
+                          1 | Иванов Иван Иванович           | USA                            |    3
+                          2 | Петров Петр Петрович           | Canada                         |    4
+                          3 | Иоганн Себастьян Бах           | Japan                          |    5
+                        (5 rows)
