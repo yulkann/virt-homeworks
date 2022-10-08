@@ -188,14 +188,34 @@
 
 Создайте бэкап БД test_db и поместите его в volume, предназначенный для бэкапов (см. Задачу 1).
 
+            # cd /backup
+            # ls
+            # pg_dump -U netologyuser test_db > /backup/dump.sql
+            # ls
+            dump.sql
+
 Остановите контейнер с PostgreSQL (но не удаляйте volumes).
+
+                        root@yulka98356:~/06-db-02-sql/PGSQL2# docker stop a30479e23b1f
+                        a30479e23b1f
+                        root@yulka98356:~/06-db-02-sql/PGSQL2# docker ps -a
+                        CONTAINER ID   IMAGE         COMMAND                  CREATED          STATUS                     PORTS                                                 NAMES
+                        a30479e23b1f   postgres:12   "docker-entrypoint.s…"   4 hours ago      Exited (0) 7 seconds ago                                                         postgres_netology
+
+
 
 Поднимите новый пустой контейнер с PostgreSQL.
 
+                        root@yulka98356:~/06-db-02-sql/PGSQL2# docker-compose up -d
+                        Creating network "pgsql2_default" with the default driver
+                        Creating volume "pgsql2_postgressql_data" with default driver
+                        Creating volume "pgsql2_backup_postgressql_data" with default driver
+                        Creating postgres2 ... done
+                        root@yulka98356:~/06-db-02-sql/PGSQL2# docker ps -a
+                        CONTAINER ID   IMAGE         COMMAND                  CREATED          STATUS                     PORTS                                                 NAMES
+                        5e167d80829f   postgres:12   "docker-entrypoint.s…"   14 seconds ago   Up 13 seconds              5432/tcp, 0.0.0.0:5433->5433/tcp, :::5433->5433/tcp   postgres2
+                        a30479e23b1f   postgres:12   "docker-entrypoint.s…"   4 hours ago      Exited (1) 3 minutes ago                                                         postgres_netology
+
 Восстановите БД test_db в новом контейнере.
 
-Приведите список операций, который вы применяли для бэкапа данных и восстановления. 
 
-
-
----
