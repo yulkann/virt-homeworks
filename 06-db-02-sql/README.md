@@ -51,7 +51,8 @@
             (4 rows)
             
 - описание таблиц (describe)
-test_db=# \d+ orders
+
+             test_db=# \d+ orders
                                                             Table "public.orders"
              Column |     Type      | Collation | Nullable |              Default               | Storage  | Stats target | Description
             --------+---------------+-----------+----------+------------------------------------+----------+--------------+-------------
