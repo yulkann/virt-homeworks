@@ -109,13 +109,13 @@
 
 **Приведите в ответе** количество записей с `price` > 300.
 
-mysql> select count(*) from orders where price >300;
-+----------+
-| count(*) |
-+----------+
-|        1 |
-+----------+
-1 row in set (0.00 sec)
+        mysql> select count(*) from orders where price >300;
+        +----------+
+        | count(*) |
+        +----------+
+        |        1 |
+        +----------+
+        1 row in set (0.00 sec)
 
 
 ## Задача 2
@@ -129,39 +129,82 @@ mysql> select count(*) from orders where price >300;
     - Фамилия "Pretty"
     - Имя "James"
 
+                mysql> CREATE USER 'test'@'localhost' IDENTIFIED WITH mysql_native_password BY 'test-pass'
+                    -> WITH MAX_QUERIES_PER_HOUR 100
+                    -> PASSWORD EXPIRE INTERVAL 180 DAY
+                    -> FAILED_LOGIN_ATTEMPTS 3
+                    -> ATTRIBUTE '{"First Name":"James","Last Name":"Pretty"}';
+                Query OK, 0 rows affected (0.02 sec)
+
 Предоставьте привелегии пользователю `test` на операции SELECT базы `test_db`.
+
+                mysql> GRANT SELECT ON test_db.* TO 'test'@'localhost';
+                Query OK, 0 rows affected, 1 warning (0.01 sec)
     
 Используя таблицу INFORMATION_SCHEMA.USER_ATTRIBUTES получите данные по пользователю `test` и 
 **приведите в ответе к задаче**.
 
+                mysql> SELECT * FROM INFORMATION_SCHEMA.USER_ATTRIBUTES WHERE USER='test';
+                +------+-----------+------------------------------------------------+
+                | USER | HOST      | ATTRIBUTE                                      |
+                +------+-----------+------------------------------------------------+
+                | test | localhost | {"Last Name": "Pretty", "First Name": "James"} |
+                +------+-----------+------------------------------------------------+
+                1 row in set (0.00 sec)
+
 ## Задача 3
 
 Установите профилирование `SET profiling = 1`.
+
+                mysql> SET profiling = 1;
+                Query OK, 0 rows affected, 1 warning (0.00 sec)
+
 Изучите вывод профилирования команд `SHOW PROFILES;`.
 
+                mysql> SHOW PROFILES;
+                +----------+------------+-----------------------------------------------------------------------------+
+                | Query_ID | Duration   | Query
+                |
+                +----------+------------+-----------------------------------------------------------------------------+
+                |        1 | 0.00118550 | SHOW TABLE STATUS
+                |
+                |        2 | 0.00110950 | SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'test_db' |
+                +----------+------------+-----------------------------------------------------------------------------+
+                2 rows in set, 1 warning (0.00 sec)
+
 Исследуйте, какой `engine` используется в таблице БД `test_db` и **приведите в ответе**.
+
+                mysql> SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'test_db';
+                +--------+
+                | ENGINE |
+                +--------+
+                | InnoDB |
+                +--------+
+                1 row in set (0.00 sec)
 
 Измените `engine` и **приведите время выполнения и запрос на изменения из профайлера в ответе**:
 - на `MyISAM`
 - на `InnoDB`
 
+                mysql> ALTER TABLE orders ENGINE = MyISAM;
+                Query OK, 5 rows affected (0.07 sec)
+                Records: 5  Duplicates: 0  Warnings: 0
+
+                mysql> ALTER TABLE orders ENGINE = InnoDB;
+                Query OK, 5 rows affected (0.08 sec)
+                Records: 5  Duplicates: 0  Warnings: 0
+
 ## Задача 4 
 
-Изучите файл `my.cnf` в директории /etc/mysql.
+                [mysqld]
+                pid-file        = /var/run/mysqld/mysqld.pid
+                socket          = /var/run/mysqld/mysqld.sock
+                datadir         = /var/lib/mysql
+                secure-file-priv= NULL
 
-Измените его согласно ТЗ (движок InnoDB):
-- Скорость IO важнее сохранности данных
-- Нужна компрессия таблиц для экономии места на диске
-- Размер буффера с незакомиченными транзакциями 1 Мб
-- Буффер кеширования 30% от ОЗУ
-- Размер файла логов операций 100 Мб
-
-Приведите в ответе измененный файл `my.cnf`.
-
----
-
-### Как оформить ДЗ?
-
-Выполненное домашнее задание пришлите ссылкой на .md-файл в вашем репозитории.
-
----
+                innodb_flush_log_at_trx_commit = 0 
+                innodb_file_per_table = 1
+                autocommit = 0
+                innodb_log_buffer_size	= 1M
+                key_buffer_size = 2448М
+                max_binlog_size	= 100M
