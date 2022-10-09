@@ -7,7 +7,10 @@
 
 ## Задача 1 (Вариант с Yandex.Cloud). Регистрация в ЯО и знакомство с основами (необязательно, но крайне желательно).
 
-            root@yulka98356:/netology-terraform# yc config list
+ Используйте раздел "Подготовьте облако к работе" для регистрации аккаунта. Далее раздел "Настройте провайдер" для подготовки базового терраформ конфига.
+  
+
+           root@yulka98356:/netology-terraform# yc config list
             service-account-key:
               id: (XXXXX)
               service_account_id: (XXXXXX)
@@ -23,6 +26,8 @@
                 -----END PRIVATE KEY-----
             cloud-id: ($YC_CLOUD_ID)
             folder-id: ($YC_FOLDER_ID)
+
+  Воспользуйтесь инструкцией на сайте терраформа, что бы не указывать авторизационный токен в коде, а терраформ провайдер брал его из переменных окружений.
 
             export YC_TOKEN=$(yc iam create-token)
             export YC_CLOUD_ID=$(yc config get cloud-id)
