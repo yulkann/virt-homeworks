@@ -107,15 +107,33 @@
                default = "fd87e6142mvinu7q1kul"
 
 4. В файле `main.tf` воспользуйтесь блоком `data "aws_ami` для поиска ami образа последнего Ubuntu.  
+
+               image_id fd8kdq6d0p8sij7h5qe3
+
 5. В файле `main.tf` создайте рессурс 
    1. либо [yandex_compute_image](https://registry.terraform.io/providers/yandex-cloud/yandex/latest/docs/resources/compute_image).
 
 7. Если вы выполнили первый пункт, то добейтесь того, что бы команда `terraform plan` выполнялась без ошибок. 
 
+                Plan: 3 to add, 0 to change, 0 to destroy.
+
+                Changes to Outputs:
+                  + external_ip_address_vm_1 = (known after apply)
+                  + internal_ip_address_vm_1 = (known after apply)
+
+                ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+                Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run "terraform apply" now.
+                root@yulka98356:/devops-netology/terraform#
 
 В качестве результата задания предоставьте:
 1. Ответ на вопрос: при помощи какого инструмента (из разобранных на прошлом занятии) можно создать свой образ ami?
+
+          Packet
+
 1. Ссылку на репозиторий с исходной конфигурацией терраформа.  
+
+          https://github.com/yulkann/devops-netology
  
 ---
 
