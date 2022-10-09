@@ -56,11 +56,56 @@
 ## Задача 2. Создание aws ec2 или yandex_compute_instance через терраформ. 
 
 1. В каталоге `terraform` вашего основного репозитория, который был создан в начале курсе, создайте файл `main.tf` и `versions.tf`.
+
+            root@yulka98356:/devops-netology/terraform# ll
+            total 24
+            drwxr-xr-x 2 root root 4096 Oct  9 19:22 ./
+            drwxr-xr-x 4 root root 4096 Oct  9 19:19 ../
+            -rw-r--r-- 1 root root  861 Oct  9 19:19 .gitignore
+            -rw-r--r-- 1 root root  283 Oct  9 19:21 main.tf
+            -rw-r--r-- 1 root root  541 Oct  9 19:22 variables.tf
+            -rw-r--r-- 1 root root    1 Oct  9 19:22 versions.tf
+
 2. Зарегистрируйте провайдер 
-   1. либо для [yandex.cloud](https://registry.terraform.io/providers/yandex-cloud/yandex/latest/docs). Подробную инструкцию можно найти 
-   [здесь](https://cloud.yandex.ru/docs/solutions/infrastructure-management/terraform-quickstart).
+
+            root@yulka98356:/netology-terraform# cat main.tf
+            # Provider
+            terraform {
+              required_providers {
+                yandex = {
+                  source = "yandex-cloud/yandex"
+                }
+              }
+            }
+
+            provider "yandex" {
+              service_account_key_file = "key.json"
+              cloud_id  = "${var.yandex_cloud_id}"
+              folder_id = "${var.yandex_folder_id}"
+              required_version = ">= 0.13"
+            }
+
 3. Внимание! В гит репозиторий нельзя пушить ваши личные ключи доступа к аккаунту. Поэтому в предыдущем задании мы указывали
 их в виде переменных окружения. 
+
+             root@yulka98356:/devops-netology/terraform# cat variables.tf
+             # Заменить на ID своего облака
+             # https://console.cloud.yandex.ru/cloud?section=overview
+             variable "yandex_cloud_id" {
+               default = $YC_CLOUD_ID
+             }
+
+             # Заменить на Folder своего облака
+             # https://console.cloud.yandex.ru/cloud?section=overview
+             variable "yandex_folder_id" {
+               default = $YC_FOLDER_ID
+             }
+
+             # Заменить на ID своего образа
+             # ID можно узнать с помощью команды yc compute image list
+             variable "centos-7-base" {
+               default = "fd87e6142mvinu7q1kul"
+
 4. В файле `main.tf` воспользуйтесь блоком `data "aws_ami` для поиска ami образа последнего Ubuntu.  
 5. В файле `main.tf` создайте рессурс 
    1. либо [yandex_compute_image](https://registry.terraform.io/providers/yandex-cloud/yandex/latest/docs/resources/compute_image).
