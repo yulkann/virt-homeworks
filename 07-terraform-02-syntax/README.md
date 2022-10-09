@@ -7,34 +7,27 @@
 
 ## Задача 1 (Вариант с Yandex.Cloud). Регистрация в ЯО и знакомство с основами (необязательно, но крайне желательно).
 
-               root@yulka98356:/netology-terraform# cat main.tf
-               # Provider
-               terraform {
-                 required_providers {
-                   yandex = {
-                     source = "yandex-cloud/yandex"
-                   }
-                 }
-               }
+            root@yulka98356:/netology-terraform# yc config list
+            service-account-key:
+              id: (XXXXX)
+              service_account_id: (XXXXXX)
+              created_at: "2022-10-09T17:44:39.753288673Z"
+              key_algorithm: RSA_2048
+              public_key: |
+                -----BEGIN PUBLIC KEY-----
 
-               provider "yandex" {
-                 service_account_key_file = "key.json"
-                 cloud_id  = "${var.yandex_cloud_id}"
-                 folder_id = "${var.yandex_folder_id}"
-                 required_version = ">= 0.13"
-               }
-               root@yulka98356:/netology-terraform# cat variables.tf
-               variable "yandex_cloud_id" {
-                 default = $YC_CLOUD_ID
-               }
+                -----END PUBLIC KEY-----
+              private_key: |
+                -----BEGIN PRIVATE KEY-----
+            =
+                -----END PRIVATE KEY-----
+            cloud-id: ($YC_CLOUD_ID)
+            folder-id: ($YC_FOLDER_ID)
 
-               variable "yandex_folder_id" {
-                 default = $YC_FOLDER_ID
-               }
+            export YC_TOKEN=$(yc iam create-token)
+            export YC_CLOUD_ID=$(yc config get cloud-id)
+            export YC_FOLDER_ID=$(yc config get folder-id)
 
-               variable "centos-7-base" {
-                 default = "fd884f65mo7hpqd0suh4"
-               }
 
 ## Задача 2. Создание aws ec2 или yandex_compute_instance через терраформ. 
 
