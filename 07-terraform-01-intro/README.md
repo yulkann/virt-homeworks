@@ -26,17 +26,17 @@
 
 ## Задача 2. Установка терраформ. 
 
-      root@yulka98356:~# terraform --version
-      Terraform v1.3.2
-      on linux_amd64
+        root@yulka98356:~# terraform --version
+        Terraform v1.3.2
+        on linux_amd64
 
 ## Задача 3. Поддержка легаси кода. 
 
-В какой-то момент вы обновили терраформ до новой версии, например с 0.12 до 0.13. 
-А код одного из проектов настолько устарел, что не может работать с версией 0.13. 
-В связи с этим необходимо сделать так, чтобы вы могли одновременно использовать последнюю версию терраформа установленную при помощи
-штатного менеджера пакетов и устаревшую версию 0.12. 
+       root@yulka98356:~# ./terraform --version
+       Terraform v0.12.30
 
-В виде результата этой задачи приложите вывод `--version` двух версий терраформа доступных на вашем компьютере 
-или виртуальной машине.
-
+       Your version of Terraform is out of date! The latest version
+       is 1.3.2. You can update by downloading from https://www.terraform.io/downloads.html
+       root@yulka98356:~# terraform --version
+       Terraform v1.3.2
+       on linux_amd64
