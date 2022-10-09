@@ -4,38 +4,37 @@
 Поэтому в рамках первого *необязательного* задания предлагается завести свою учетную запись в AWS (Amazon Web Services) или Yandex.Cloud.
 Идеально будет познакомится с обоими облаками, потому что они отличаются. 
 
-## Задача 1 (вариант с AWS). Регистрация в aws и знакомство с основами (необязательно, но крайне желательно).
-
-Остальные задания можно будет выполнять и без этого аккаунта, но с ним можно будет увидеть полный цикл процессов. 
-
-AWS предоставляет достаточно много бесплатных ресурсов в первый год после регистрации, подробно описано [здесь](https://aws.amazon.com/free/).
-1. Создайте аккаут aws.
-1. Установите c aws-cli https://aws.amazon.com/cli/.
-1. Выполните первичную настройку aws-sli https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html.
-1. Создайте IAM политику для терраформа c правами
-    * AmazonEC2FullAccess
-    * AmazonS3FullAccess
-    * AmazonDynamoDBFullAccess
-    * AmazonRDSFullAccess
-    * CloudWatchFullAccess
-    * IAMFullAccess
-1. Добавьте переменные окружения 
-    ```
-    export AWS_ACCESS_KEY_ID=(your access key id)
-    export AWS_SECRET_ACCESS_KEY=(your secret access key)
-    ```
-1. Создайте, остановите и удалите ec2 инстанс (любой с пометкой `free tier`) через веб интерфейс. 
-
-В виде результата задания приложите вывод команды `aws configure list`.
 
 ## Задача 1 (Вариант с Yandex.Cloud). Регистрация в ЯО и знакомство с основами (необязательно, но крайне желательно).
 
-1. Подробная инструкция на русском языке содержится [здесь](https://cloud.yandex.ru/docs/solutions/infrastructure-management/terraform-quickstart).
-2. Обратите внимание на период бесплатного использования после регистрации аккаунта. 
-3. Используйте раздел "Подготовьте облако к работе" для регистрации аккаунта. Далее раздел "Настройте провайдер" для подготовки
-базового терраформ конфига.
-4. Воспользуйтесь [инструкцией](https://registry.terraform.io/providers/yandex-cloud/yandex/latest/docs) на сайте терраформа, что бы 
-не указывать авторизационный токен в коде, а терраформ провайдер брал его из переменных окружений.
+               root@yulka98356:/netology-terraform# cat main.tf
+               # Provider
+               terraform {
+                 required_providers {
+                   yandex = {
+                     source = "yandex-cloud/yandex"
+                   }
+                 }
+               }
+
+               provider "yandex" {
+                 service_account_key_file = "key.json"
+                 cloud_id  = "${var.yandex_cloud_id}"
+                 folder_id = "${var.yandex_folder_id}"
+                 required_version = ">= 0.13"
+               }
+               root@yulka98356:/netology-terraform# cat variables.tf
+               variable "yandex_cloud_id" {
+                 default = $YC_CLOUD_ID
+               }
+
+               variable "yandex_folder_id" {
+                 default = $YC_FOLDER_ID
+               }
+
+               variable "centos-7-base" {
+                 default = "fd884f65mo7hpqd0suh4"
+               }
 
 ## Задача 2. Создание aws ec2 или yandex_compute_instance через терраформ. 
 
