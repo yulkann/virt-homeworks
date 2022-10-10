@@ -8,8 +8,18 @@
 1. Создайте s3 бакет, iam роль и пользователя от которого будет работать терраформ. Можно создать отдельного пользователя,
 а можно использовать созданного в рамках предыдущего задания, просто добавьте ему необходимы права, как описано 
 [здесь](https://www.terraform.io/docs/backends/types/s3.html).
+
+               root@yulka98356:~# ycs3 ls
+               2022-10-10 17:54:33 yulkann-netology
+
 1. Зарегистрируйте бэкэнд в терраформ проекте как описано по ссылке выше. 
 
+               root@yulka98356:/devops-netology/terraform# terraform init
+
+               Initializing the backend...
+
+               Successfully configured the backend "s3"! Terraform will automatically
+               use this backend unless the backend configuration changes.
 
 ## Задача 2. Инициализируем проект и создаем воркспейсы. 
 
