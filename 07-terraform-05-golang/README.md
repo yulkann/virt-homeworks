@@ -5,6 +5,10 @@
 
 ## Задача 1. Установите golang.
 1. Воспользуйтесь инструкций с официального сайта: [https://golang.org/](https://golang.org/).
+
+                root@yulka98356:~# go version
+                go version go1.13.8 linux/amd64
+
 2. Так же для тестирования кода можно использовать песочницу: [https://play.golang.org/](https://play.golang.org/).
 
 ## Задача 2. Знакомство с gotour.
