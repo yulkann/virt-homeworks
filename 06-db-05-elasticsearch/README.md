@@ -2,21 +2,6 @@
 
 ## Задача 1
 
-В этом задании вы потренируетесь в:
-- установке elasticsearch
-- первоначальном конфигурировании elastcisearch
-- запуске elasticsearch в docker
-
-Используя докер образ [elasticsearch:7](https://hub.docker.com/_/elasticsearch) как базовый:
-
-- составьте Dockerfile-манифест для elasticsearch
-- соберите docker-образ и сделайте `push` в ваш docker.io репозиторий
-- запустите контейнер из получившегося образа и выполните запрос пути `/` c хост-машины
-
-Требования к `elasticsearch.yml`:
-- данные `path` должны сохраняться в `/var/lib` 
-- имя ноды должно быть `netology_test`
-
 В ответе приведите:
 - текст Dockerfile манифеста
           
@@ -84,11 +69,6 @@ https://hub.docker.com/u/yulkann/elastic
 
 ## Задача 2
 
-В этом задании вы научитесь:
-- создавать и удалять индексы
-- изучать состояние кластера
-- обосновывать причину деградации доступности данных
-
 Ознакомтесь с [документацией](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-create-index.html) 
 и добавьте в `elasticsearch` 3 индекса, в соответствии со таблицей:
 
@@ -98,24 +78,66 @@ https://hub.docker.com/u/yulkann/elastic
 | ind-2 | 1 | 2 |
 | ind-3 | 2 | 4 |
 
+
+                              [elasticsearch@d2c57807d242 /]$ curl -X PUT localhost:9200/ind-1 -H 'Content-Type: application/json' -d'{ "settings": { "number_of_shards": 1,  "number_of_replicas": 0 }}'
+                              {"acknowledged":true,"shards_acknowledged":true,"index":"ind-1"}
+                              [elasticsearch@d2c57807d242 /]$ curl -X PUT localhost:9200/ind-2 -H 'Content-Type: application/json' -d'{ "settings": { "number_of_shards": 2,  "number_of_replicas": 1 }}'
+                              {"acknowledged":true,"shards_acknowledged":true,"index":"ind-2"}
+                              [elasticsearch@d2c57807d242 /]$ curl -X PUT localhost:9200/ind-3 -H 'Content-Type: application/json' -d'{ "settings": { "number_of_shards": 4,  "number_of_replicas": 2 }}'
+                              {"acknowledged":true,"shards_acknowledged":true,"index":"ind-3"}
+
 Получите список индексов и их статусов, используя API и **приведите в ответе** на задание.
+
+                              [elasticsearch@d2c57807d242 /]$ curl -X GET 'http://localhost:9200/_cat/indices?v'
+
+                              health status index            uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+                              green  open   .geoip_databases ECGffgY2THqHxSvAk1GbJQ   1   0         41            0       39mb           39mb
+                              green  open   ind-1            hpJA921MTIGtZZGLFV9Z2g   1   0          0            0       226b           226b
+                              yellow open   ind-3            GBbNhM5MSS6pomcOLgBfbA   4   2          0            0       904b           904b
+                              yellow open   ind-2            yBSSLI3BQquQBEzHdmSnwQ   2   1          0            0       452b           452b
+
 
 Получите состояние кластера `elasticsearch`, используя API.
 
+                              [elasticsearch@d2c57807d242 /]$ curl -X GET 'http://localhost:9200/_cluster/health?pretty'
+                              {
+                                "cluster_name" : "netology-devops",
+                                "status" : "yellow",
+                                "timed_out" : false,
+                                "number_of_nodes" : 1,
+                                "number_of_data_nodes" : 1,
+                                "active_primary_shards" : 10,
+                                "active_shards" : 10,
+                                "relocating_shards" : 0,
+                                "initializing_shards" : 0,
+                                "unassigned_shards" : 10,
+                                "delayed_unassigned_shards" : 0,
+                                "number_of_pending_tasks" : 0,
+                                "number_of_in_flight_fetch" : 0,
+                                "task_max_waiting_in_queue_millis" : 0,
+                                "active_shards_percent_as_number" : 50.0
+                              }
+
+
 Как вы думаете, почему часть индексов и кластер находится в состоянии yellow?
+
+                              так как у меня только одна нода и некуда реплицировать
 
 Удалите все индексы.
 
-**Важно**
+                              [elasticsearch@d2c57807d242 /]$ curl -X DELETE http://localhost:9200/ind-1
+                              {"acknowledged":true}
+                              [elasticsearch@d2c57807d242 /]$ curl -X DELETE http://localhost:9200/ind-2
+                              {"acknowledged":true}
+                              [elasticsearch@d2c57807d242 /]$ curl -X DELETE http://localhost:9200/ind-3
+                              {"acknowledged":true}
+                              [elasticsearch@d2c57807d242 /]$ curl -XGET 'http://localhost:9200/_cat/indices?v'
+                              health status index            uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+                              green  open   .geoip_databases ECGffgY2THqHxSvAk1GbJQ   1   0         41            0       39mb           39mb
 
-При проектировании кластера elasticsearch нужно корректно рассчитывать количество реплик и шард,
-иначе возможна потеря данных индексов, вплоть до полной, при деградации системы.
 
 ## Задача 3
 
-В данном задании вы научитесь:
-- создавать бэкапы данных
-- восстанавливать индексы из бэкапов
 
 Создайте директорию `{путь до корневой директории с elasticsearch в образе}/snapshots`.
 
@@ -124,12 +146,31 @@ https://hub.docker.com/u/yulkann/elastic
 
 **Приведите в ответе** запрос API и результат вызова API для создания репозитория.
 
+                              [elasticsearch@a407414bbcd3 /]$ curl -XPUT http://localhost:9200/_snapshot/netology_backup?pretty -H 'content-type: application/json' -d'{ "type": "fs", "settings": { "location": "/usr/elasticsearch/elasticsearch-7.17.3/bin/snapshots"}}'
+                              {
+                                "acknowledged" : true
+                              }
+
+
 Создайте индекс `test` с 0 реплик и 1 шардом и **приведите в ответе** список индексов.
+
+                              [elasticsearch@a407414bbcd3 /]$ curl -XGET 'http://localhost:9200/_cat/indices?v'
+                              health status index            uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+                              green  open   .geoip_databases sNMlqjvIT_yFxUMOpxK6dA   1   0         41            0       39mb           39mb
+                              green  open   test             HKNMjidwTQS5BhxCVql-zQ   1   0          0            0       226b           226b
 
 [Создайте `snapshot`](https://www.elastic.co/guide/en/elasticsearch/reference/current/snapshots-take-snapshot.html) 
 состояния кластера `elasticsearch`.
 
 **Приведите в ответе** список файлов в директории со `snapshot`ами.
+
+                              [elasticsearch@a407414bbcd3 /]$ ll /usr/elasticsearch/elasticsearch-7.17.3/bin/snapshots
+                              total 48
+                              -rw-r--r-- 1 elasticsearch elasticsearch  1426 Oct 21 11:44 index-0
+                              -rw-r--r-- 1 elasticsearch elasticsearch     8 Oct 21 11:44 index.latest
+                              drwxr-xr-x 6 elasticsearch elasticsearch  4096 Oct 21 11:44 indices
+                              -rw-r--r-- 1 elasticsearch elasticsearch 29301 Oct 21 11:44 meta-136yYPnqS0OfwFk86I9oag.dat
+                              -rw-r--r-- 1 elasticsearch elasticsearch   713 Oct 21 11:44 snap-136yYPnqS0OfwFk86I9oag.dat
 
 Удалите индекс `test` и создайте индекс `test-2`. **Приведите в ответе** список индексов.
 
@@ -138,13 +179,12 @@ https://hub.docker.com/u/yulkann/elastic
 
 **Приведите в ответе** запрос к API восстановления и итоговый список индексов.
 
-Подсказки:
-- возможно вам понадобится доработать `elasticsearch.yml` в части директивы `path.repo` и перезапустить `elasticsearch`
-
----
-
-### Как cдавать задание
-
-Выполненное домашнее задание пришлите ссылкой на .md-файл в вашем репозитории.
-
----
+                              [elasticsearch@a407414bbcd3 /]$ curl -XPOST localhost:9200/_snapshot/netology_backup/first_snapshot/_restore?pretty -H 'content-type: application/json' -d'{"indices": "test"}'
+                              {
+                                "accepted" : true
+                              }
+                              [elasticsearch@a407414bbcd3 /]$ curl -XGET 'http://localhost:9200/_cat/indices?v'
+                              health status index            uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+                              green  open   .geoip_databases sNMlqjvIT_yFxUMOpxK6dA   1   0         41            0       39mb           39mb
+                              green  open   test-2           x5GGpcKTTGWZ6ZtPyEfbEg   1   0          0            0       226b           226b
+                              green  open   test             yF1lINNQSyGxXkIFqmG6Aw   1   0          0            0       226b           226b
