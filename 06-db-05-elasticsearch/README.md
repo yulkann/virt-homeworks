@@ -48,7 +48,7 @@
 
 - ссылку на образ в репозитории dockerhub
 
-          https://hub.docker.com/u/yulkann/elastic
+https://hub.docker.com/u/yulkann/elastic
 
 - ответ `elasticsearch` на запрос пути `/` в json виде
 
