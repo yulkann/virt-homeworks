@@ -19,8 +19,58 @@
 
 В ответе приведите:
 - текст Dockerfile манифеста
+          
+          ### так как из России не скачивался дистрибутив, предварительно скачала нужный и положила в папку с докерфайлом
+          
+          
+          root@elastichw:/home/ansible# cat Dockerfile
+          FROM centos:7
+
+          RUN yum install -y java-11-openjdk wget curl perl-Digest-SHA
+          RUN mkdir /usr/elasticsearch
+          COPY elasticsearch-7.17.3-linux-x86_64.tar.gz /usr/elasticsearch
+          RUN cd /usr/elasticsearch && tar -xzf elasticsearch-7.17.3-linux-x86_64.tar.gz
+          COPY elasticsearch.yml /usr/elasticsearch/elasticsearch-7.17.3/config/elasticsearch.yml
+          RUN groupadd elasticsearch && \
+              useradd elasticsearch -g elasticsearch -p elasticsearch && \
+              cd /opt && \
+              chown -R elasticsearch:elasticsearch /usr/elasticsearch
+
+          RUN mkdir /var/lib/elasticsearch_data && \
+              chown -R elasticsearch:elasticsearch /var/lib/elasticsearch_data && \
+              mkdir /var/lib/elasticsearch_logs && \
+              chown -R elasticsearch:elasticsearch /var/lib/elasticsearch_logs
+
+USER elasticsearch
+
+CMD ["/usr/sbin/init"]
+CMD ["/usr/elasticsearch/elasticsearch-7.17.3/bin/elasticsearch"]
+
 - ссылку на образ в репозитории dockerhub
+
+          https://hub.docker.com/u/yulkann/elastic
+
 - ответ `elasticsearch` на запрос пути `/` в json виде
+
+
+            [elasticsearch@d2c57807d242 /]$ curl -X GET 'http://localhost:9200/'
+            {
+              "name" : "netology_test",
+              "cluster_name" : "netology-devops",
+              "cluster_uuid" : "NVsMEOh0RwONE-QOy7-Kvg",
+              "version" : {
+                "number" : "7.17.3",
+                "build_flavor" : "default",
+                "build_type" : "tar",
+                "build_hash" : "5ad023604c8d7416c9eb6c0eadb62b14e766caff",
+                "build_date" : "2022-04-19T08:11:19.070913226Z",
+                "build_snapshot" : false,
+                "lucene_version" : "8.11.1",
+                "minimum_wire_compatibility_version" : "6.8.0",
+                "minimum_index_compatibility_version" : "6.0.0-beta1"
+              },
+              "tagline" : "You Know, for Search"
+            }
 
 Подсказки:
 - при сетевых проблемах внимательно изучите кластерные и сетевые настройки в elasticsearch.yml
